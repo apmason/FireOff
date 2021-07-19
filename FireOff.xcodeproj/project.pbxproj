@@ -20,6 +20,14 @@
 		C30A422626A362D700472D64 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422426A362D700472D64 /* Constants.swift */; };
 		C30A423026A365A600472D64 /* TwitterSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422F26A365A600472D64 /* TwitterSignIn.swift */; };
 		C30A423126A365A600472D64 /* TwitterSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422F26A365A600472D64 /* TwitterSignIn.swift */; };
+		C380EB2026A4C7F400CAE4DD /* AlertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB1F26A4C7F400CAE4DD /* AlertState.swift */; };
+		C380EB2126A4C7F400CAE4DD /* AlertState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB1F26A4C7F400CAE4DD /* AlertState.swift */; };
+		C380EB3F26A4D05F00CAE4DD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */; };
+		C380EB4026A4D05F00CAE4DD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */; };
+		C380EB4A26A5DF5D00CAE4DD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB4926A5DF5D00CAE4DD /* SignInView.swift */; };
+		C380EB4B26A5DF5D00CAE4DD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB4926A5DF5D00CAE4DD /* SignInView.swift */; };
+		C380EB5526A5E0AB00CAE4DD /* TweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB5426A5E0AB00CAE4DD /* TweetView.swift */; };
+		C380EB5626A5E0AB00CAE4DD /* TweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB5426A5E0AB00CAE4DD /* TweetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +64,10 @@
 		C30A420326A35B7200472D64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C30A422426A362D700472D64 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C30A422F26A365A600472D64 /* TwitterSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterSignIn.swift; sourceTree = "<group>"; };
+		C380EB1F26A4C7F400CAE4DD /* AlertState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertState.swift; sourceTree = "<group>"; };
+		C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		C380EB4926A5DF5D00CAE4DD /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		C380EB5426A5E0AB00CAE4DD /* TweetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +118,9 @@
 		C30A41DA26A35B7100472D64 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C380EB2E26A4D04500CAE4DD /* Views */,
 				C30A422426A362D700472D64 /* Constants.swift */,
+				C380EB1F26A4C7F400CAE4DD /* AlertState.swift */,
 				C30A422326A361A900472D64 /* Models */,
 				C30A41DB26A35B7100472D64 /* FireOffApp.swift */,
 				C30A41DC26A35B7100472D64 /* ContentView.swift */,
@@ -167,6 +181,16 @@
 				C30A422F26A365A600472D64 /* TwitterSignIn.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		C380EB2E26A4D04500CAE4DD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */,
+				C380EB4926A5DF5D00CAE4DD /* SignInView.swift */,
+				C380EB5426A5E0AB00CAE4DD /* TweetView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,9 +357,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C30A420626A35B7200472D64 /* ContentView.swift in Sources */,
+				C380EB4A26A5DF5D00CAE4DD /* SignInView.swift in Sources */,
 				C30A423026A365A600472D64 /* TwitterSignIn.swift in Sources */,
 				C30A420426A35B7200472D64 /* FireOffApp.swift in Sources */,
+				C380EB2026A4C7F400CAE4DD /* AlertState.swift in Sources */,
 				C30A422526A362D700472D64 /* Constants.swift in Sources */,
+				C380EB5526A5E0AB00CAE4DD /* TweetView.swift in Sources */,
+				C380EB3F26A4D05F00CAE4DD /* ActivityView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,9 +372,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C30A420726A35B7200472D64 /* ContentView.swift in Sources */,
+				C380EB4B26A5DF5D00CAE4DD /* SignInView.swift in Sources */,
 				C30A423126A365A600472D64 /* TwitterSignIn.swift in Sources */,
 				C30A420526A35B7200472D64 /* FireOffApp.swift in Sources */,
+				C380EB2126A4C7F400CAE4DD /* AlertState.swift in Sources */,
 				C30A422626A362D700472D64 /* Constants.swift in Sources */,
+				C380EB5626A5E0AB00CAE4DD /* TweetView.swift in Sources */,
+				C380EB4026A4D05F00CAE4DD /* ActivityView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
