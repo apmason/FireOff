@@ -9,7 +9,9 @@ import SwiftUI
 
 struct TweetView: View {
     var body: some View {
-        Text("Tweet view")
+        VStack {
+            Text(TwitterSignIn.shared.userName ?? "Loading")
+        }
     }
 }
 

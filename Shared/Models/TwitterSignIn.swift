@@ -24,6 +24,12 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     @Published var signedIn: Bool = false
     
+    private var token: Credential.OAuthAccessToken?
+    
+    var userName: String? {
+        return token?.screenName
+    }
+    
     private override init() {}
     
     func signIn(completion: @escaping (Result<Void, TwitterError>) -> Void) {
@@ -36,6 +42,7 @@ class TwitterSignIn: NSObject, ObservableObject {
             
             if httpResponse.statusCode == 200 {
                 self.signedIn = true
+                self.token = token
                 completion(.success(()))
             } else {
                 self.signedIn = false
