@@ -19,10 +19,8 @@ struct TweetView: View {
                 HStack {
                     Text(TwitterSignIn.shared.userName ?? "Loading")
                 }
-                TextEditor(text: $tweetText)
-                    .onChange(of: tweetText) { value in
-                        remainingCharacters = maxCharacters - tweetText.count
-                    }
+                PlaceholderEditor(placeholderText: "Hey!")
+                    .frame(alignment: .topLeading)
                 Divider()
                 Text("\(remainingCharacters)")
             }
