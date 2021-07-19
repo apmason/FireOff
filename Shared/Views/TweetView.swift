@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TweetView: View {
     var body: some View {
-        Text("Hello, my bitch")
+        Text("Tweet view")
     }
 }
 
