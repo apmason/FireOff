@@ -10,23 +10,27 @@ import SwiftUI
 struct TweetView: View {
     
     @State private var tweetText: String = ""
+    @State private var remainingCharacters: Int = 240
+    private var maxCharacters = 240
     
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 20) {
                 HStack {
                     Text(TwitterSignIn.shared.userName ?? "Loading")
-                    Text("FUCK")
-                }.frame(width: .infinity, alignment: .trailing)
-                
-                TextField("Fire it Off!", text: $tweetText)
-                    .frame(maxHeight: .infinity, alignment: .topLeading)
+                }
+                TextEditor(text: $tweetText)
+                    .onChange(of: tweetText) { value in
+                        remainingCharacters = maxCharacters - tweetText.count
+                    }
                 Divider()
-                Text("240")
-                    .frame(alignment: .trailing)
-                
+                Text("\(remainingCharacters)")
             }
-            Text("Hey brother")
+            Button("Tweet") {
+                print("Send tweet")
+                // clear out text
+                // alert user if it worked or not
+            }
         }
         .padding(20)
     }
