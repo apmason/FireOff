@@ -13,6 +13,7 @@ struct TweetView: View {
     @State private var remainingCharacters: Int = 240
     private var maxCharacters = 240
     @State private var sendingTweet: Bool = false
+    @State private var alertState = AlertState()
     
     var body: some View {
         ZStack {
@@ -39,9 +40,7 @@ struct TweetView: View {
                             // pop an alert up here showing success for a few seconds.
                             return
                         }
-                        
-                        // Show an alert
-                        print("Error was \(error.localizedDescription)")
+                        alertState.showAlert(error: error)
                     }
                 }
                 .disabled(remainingCharacters < 0)
@@ -52,6 +51,11 @@ struct TweetView: View {
                 ActivityView()
             }
         }
+        .alert(isPresented: $alertState.showAlert, content: {
+            Alert(title: Text("Oh no!"), message: Text("Error sending tweet: \(alertState.errorString)"), dismissButton: .cancel(Text("Okay"), action: {
+                self.alertState.reset()
+            }))
+        })
     }
 }
 
