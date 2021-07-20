@@ -10,13 +10,6 @@ import SwiftUI
 import Foundation
 import AuthenticationServices
 
-// TODO: - Add localized description to this
-enum TwitterError: Error {
-    case apiError(statusCode: Int)
-    case networkError
-    case sessionCancelled
-    case defaultError(Error)
-}
 
 class TwitterSignIn: NSObject, ObservableObject {
     
@@ -55,7 +48,7 @@ class TwitterSignIn: NSObject, ObservableObject {
             if webError.code == ASWebAuthenticationSessionError.Code.canceledLogin {
                 completion(.sessionCancelled)
             } else {
-                completion(.defaultError(error))
+                completion(.swiftError(error))
             }
         })
     }
