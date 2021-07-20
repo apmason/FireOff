@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
-    @State private var alertState = AlertState()
+    @State private var errorAlert = ErrorAlert()
     @State private var signingIn: Bool = false
     
     var body: some View {
@@ -23,26 +23,16 @@ struct SignInView: View {
                         return
                     }
                     
-                    switch error {
-                    case .networkError:
-                        // An unidentified network error.
-                        self.alertState.showAlert()
-                        
-                    case .apiError(statusCode: let code):
-                        self.alertState.showAlert(errorCode: code)
-                        
-                    case .sessionCancelled:
-                        break // We won't show an alert if the user cancels the session
-                    
-                    case .defaultError(let error):
-                        self.alertState.showAlert(error: error)
-                        
+                    guard case TwitterError.sessionCancelled = error else {
+                        return // we won't show an alert if the user cancels the session
                     }
+                    
+                    self.errorAlert.showAlert(for: error)
                 }
             }
-            .alert(isPresented: $alertState.showAlert, content: {
-                Alert(title: Text("Error!"), message: Text(alertState.errorString), dismissButton: .cancel(Text("Okay"), action: {
-                    self.alertState.reset()
+            .alert(isPresented: $errorAlert.showAlert, content: {
+                Alert(title: Text("Error!"), message: Text(errorAlert.errorString), dismissButton: .cancel(Text("Okay"), action: {
+                    self.errorAlert.reset()
                 }))
             })
             .padding(.all)

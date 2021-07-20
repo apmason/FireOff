@@ -10,6 +10,7 @@ import SwiftUI
 import Foundation
 import AuthenticationServices
 
+// TODO: - Add localized description to this
 enum TwitterError: Error {
     case apiError(statusCode: Int)
     case networkError
