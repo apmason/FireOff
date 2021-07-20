@@ -28,6 +28,10 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     func signIn(completion: @escaping (TwitterError?) -> Void) {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
+        if swifter == nil {
+            print("FUUCk")
+        }
+        
         swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { token, response in
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.networkError)
@@ -74,10 +78,6 @@ class TwitterSignIn: NSObject, ObservableObject {
 extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
     
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        #if os(iOS)
-        return UIApplication.shared.windows.filter {$0.isKeyWindow}.first!
-        #elseif os(macOS)
-        return NSApplication.shared.keyWindow!
-        #endif
+        return ASPresentationAnchor()
     }
 }

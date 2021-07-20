@@ -15,7 +15,6 @@
 		C30A420726A35B7200472D64 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A41DC26A35B7100472D64 /* ContentView.swift */; };
 		C30A420826A35B7200472D64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C30A41DD26A35B7200472D64 /* Assets.xcassets */; };
 		C30A420926A35B7200472D64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C30A41DD26A35B7200472D64 /* Assets.xcassets */; };
-		C30A421E26A3619B00472D64 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C30A421D26A3619B00472D64 /* Swifter */; };
 		C30A422526A362D700472D64 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422426A362D700472D64 /* Constants.swift */; };
 		C30A422626A362D700472D64 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422426A362D700472D64 /* Constants.swift */; };
 		C30A423026A365A600472D64 /* TwitterSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422F26A365A600472D64 /* TwitterSignIn.swift */; };
@@ -32,6 +31,10 @@
 		C380EB5626A5E0AB00CAE4DD /* TweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB5426A5E0AB00CAE4DD /* TweetView.swift */; };
 		C380EB8D26A7294300CAE4DD /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB8C26A7294300CAE4DD /* Colors.swift */; };
 		C380EB9B26A73E5300CAE4DD /* TwitterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB9A26A73E5300CAE4DD /* TwitterError.swift */; };
+		C3ABDE1126A75C9F0056CEE4 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3ABDE1026A75C9F0056CEE4 /* Swifter */; };
+		C3ABDE1426A75F3F0056CEE4 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3ABDE1326A75F3F0056CEE4 /* Swifter */; };
+		C3ABDE1526A774840056CEE4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB8C26A7294300CAE4DD /* Colors.swift */; };
+		C3ABDE1626A774900056CEE4 /* TwitterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB9A26A73E5300CAE4DD /* TwitterError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C30A421E26A3619B00472D64 /* Swifter in Frameworks */,
+				C3ABDE1126A75C9F0056CEE4 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3ABDE1426A75F3F0056CEE4 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +123,7 @@
 				C30A41F526A35B7200472D64 /* Tests iOS */,
 				C30A420026A35B7200472D64 /* Tests macOS */,
 				C30A41E326A35B7200472D64 /* Products */,
+				C3ABDE1226A75F3F0056CEE4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,6 +216,13 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		C3ABDE1226A75F3F0056CEE4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -228,7 +240,7 @@
 			);
 			name = "FireOff (iOS)";
 			packageProductDependencies = (
-				C30A421D26A3619B00472D64 /* Swifter */,
+				C3ABDE1026A75C9F0056CEE4 /* Swifter */,
 			);
 			productName = "FireOff (iOS)";
 			productReference = C30A41E226A35B7200472D64 /* FireOff.app */;
@@ -247,6 +259,9 @@
 			dependencies = (
 			);
 			name = "FireOff (macOS)";
+			packageProductDependencies = (
+				C3ABDE1326A75F3F0056CEE4 /* Swifter */,
+			);
 			productName = "FireOff (macOS)";
 			productReference = C30A41EA26A35B7200472D64 /* FireOff.app */;
 			productType = "com.apple.product-type.application";
@@ -294,7 +309,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					C30A41E126A35B7200472D64 = {
 						CreatedOnToolsVersion = 12.3;
@@ -322,7 +337,7 @@
 			);
 			mainGroup = C30A41D526A35B7000472D64;
 			packageReferences = (
-				C30A421C26A3619B00472D64 /* XCRemoteSwiftPackageReference "Swifter" */,
+				C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */,
 			);
 			productRefGroup = C30A41E326A35B7200472D64 /* Products */;
 			projectDirPath = "";
@@ -393,6 +408,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C30A420726A35B7200472D64 /* ContentView.swift in Sources */,
+				C3ABDE1526A774840056CEE4 /* Colors.swift in Sources */,
+				C3ABDE1626A774900056CEE4 /* TwitterError.swift in Sources */,
 				C380EB4B26A5DF5D00CAE4DD /* SignInView.swift in Sources */,
 				C30A423126A365A600472D64 /* TwitterSignIn.swift in Sources */,
 				C30A420526A35B7200472D64 /* FireOffApp.swift in Sources */,
@@ -598,6 +615,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 79TR88QV2P;
@@ -622,6 +640,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 79TR88QV2P;
@@ -780,20 +799,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C30A421C26A3619B00472D64 /* XCRemoteSwiftPackageReference "Swifter" */ = {
+		C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mattdonnelly/Swifter";
+			repositoryURL = "git@github.com:apmason/Swifter.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C30A421D26A3619B00472D64 /* Swifter */ = {
+		C3ABDE1026A75C9F0056CEE4 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C30A421C26A3619B00472D64 /* XCRemoteSwiftPackageReference "Swifter" */;
+			package = C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */;
+			productName = Swifter;
+		};
+		C3ABDE1326A75F3F0056CEE4 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */;
 			productName = Swifter;
 		};
 /* End XCSwiftPackageProductDependency section */
