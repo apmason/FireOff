@@ -17,29 +17,26 @@ struct SignInView: View {
                 // Prevent double-taps
                 guard !signingIn else { return }
                 signingIn = true
-                TwitterSignIn.shared.signIn { result in
+                TwitterSignIn.shared.signIn { error in
                     signingIn = false
-                    switch result {
-                    case .success:
-                        break // do nothing
+                    guard let error = error else {
+                        return
+                    }
+                    
+                    switch error {
+                    case .networkError:
+                        // An unidentified network error.
+                        self.alertState.showAlert()
                         
-                    // NOTE: It should be the model that dictates this stuff, we need to move it elsewhere. The View just reflects updates from the model.
-                    case .failure(let error):
-                        switch error {
-                        case .networkError:
-                            // An unidentified network error.
-                            self.alertState.showAlert()
-                            
-                        case .apiError(statusCode: let code):
-                            self.alertState.showAlert(errorCode: code)
-                            
-                        case .sessionCancelled:
-                            break // We won't show an alert if the user cancels the session
+                    case .apiError(statusCode: let code):
+                        self.alertState.showAlert(errorCode: code)
                         
-                        case .defaultError(let error):
-                            self.alertState.showAlert(error: error)
-                            
-                        }
+                    case .sessionCancelled:
+                        break // We won't show an alert if the user cancels the session
+                    
+                    case .defaultError(let error):
+                        self.alertState.showAlert(error: error)
+                        
                     }
                 }
             }
