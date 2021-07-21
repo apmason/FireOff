@@ -12,7 +12,7 @@ struct FireOffApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(width: 1200, height: 800)
+                .frame(width: 800, height: 600)
         }
     }
 }

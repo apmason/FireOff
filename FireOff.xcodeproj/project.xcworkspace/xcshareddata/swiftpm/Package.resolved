@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "Swifter",
-        "repositoryURL": "git@github.com:apmason/Swifter.git",
+        "repositoryURL": "https://github.com/apmason/Swifter",
         "state": {
           "branch": "master",
           "revision": "f4852546878bbaf22595d8fafd935357805e0241",

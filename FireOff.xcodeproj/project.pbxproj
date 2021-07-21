@@ -21,6 +21,7 @@
 		C30A423126A365A600472D64 /* TwitterSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30A422F26A365A600472D64 /* TwitterSignIn.swift */; };
 		C312BAC026A612AD001E8B71 /* PlaceholderEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C312BABF26A612AD001E8B71 /* PlaceholderEditor.swift */; };
 		C312BAC126A612AE001E8B71 /* PlaceholderEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C312BABF26A612AD001E8B71 /* PlaceholderEditor.swift */; };
+		C33C1DC626A87D3F00CF4487 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C33C1DC526A87D3F00CF4487 /* Swifter */; };
 		C380EB2026A4C7F400CAE4DD /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB1F26A4C7F400CAE4DD /* ErrorAlert.swift */; };
 		C380EB2126A4C7F400CAE4DD /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB1F26A4C7F400CAE4DD /* ErrorAlert.swift */; };
 		C380EB3F26A4D05F00CAE4DD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */; };
@@ -31,10 +32,9 @@
 		C380EB5626A5E0AB00CAE4DD /* TweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB5426A5E0AB00CAE4DD /* TweetView.swift */; };
 		C380EB8D26A7294300CAE4DD /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB8C26A7294300CAE4DD /* Colors.swift */; };
 		C380EB9B26A73E5300CAE4DD /* TwitterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB9A26A73E5300CAE4DD /* TwitterError.swift */; };
-		C3ABDE1126A75C9F0056CEE4 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3ABDE1026A75C9F0056CEE4 /* Swifter */; };
-		C3ABDE1426A75F3F0056CEE4 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3ABDE1326A75F3F0056CEE4 /* Swifter */; };
 		C3ABDE1526A774840056CEE4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB8C26A7294300CAE4DD /* Colors.swift */; };
 		C3ABDE1626A774900056CEE4 /* TwitterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB9A26A73E5300CAE4DD /* TwitterError.swift */; };
+		C3E38A8626A8863C002302A5 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3E38A8526A8863C002302A5 /* Swifter */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3ABDE1126A75C9F0056CEE4 /* Swifter in Frameworks */,
+				C3E38A8626A8863C002302A5 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3ABDE1426A75F3F0056CEE4 /* Swifter in Frameworks */,
+				C33C1DC626A87D3F00CF4487 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +240,7 @@
 			);
 			name = "FireOff (iOS)";
 			packageProductDependencies = (
-				C3ABDE1026A75C9F0056CEE4 /* Swifter */,
+				C3E38A8526A8863C002302A5 /* Swifter */,
 			);
 			productName = "FireOff (iOS)";
 			productReference = C30A41E226A35B7200472D64 /* FireOff.app */;
@@ -257,10 +257,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				C33C1D9126A87BE200CF4487 /* PBXTargetDependency */,
 			);
 			name = "FireOff (macOS)";
 			packageProductDependencies = (
-				C3ABDE1326A75F3F0056CEE4 /* Swifter */,
+				C33C1DC526A87D3F00CF4487 /* Swifter */,
 			);
 			productName = "FireOff (macOS)";
 			productReference = C30A41EA26A35B7200472D64 /* FireOff.app */;
@@ -337,7 +338,7 @@
 			);
 			mainGroup = C30A41D526A35B7000472D64;
 			packageReferences = (
-				C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */,
+				C33C1DC426A87D3F00CF4487 /* XCRemoteSwiftPackageReference "Swifter" */,
 			);
 			productRefGroup = C30A41E326A35B7200472D64 /* Products */;
 			projectDirPath = "";
@@ -449,6 +450,10 @@
 			isa = PBXTargetDependency;
 			target = C30A41E926A35B7200472D64 /* FireOff (macOS) */;
 			targetProxy = C30A41FE26A35B7200472D64 /* PBXContainerItemProxy */;
+		};
+		C33C1D9126A87BE200CF4487 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = C33C1D9026A87BE200CF4487 /* Swifter */;
 		};
 /* End PBXTargetDependency section */
 
@@ -621,12 +626,14 @@
 				DEVELOPMENT_TEAM = 79TR88QV2P;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.canopy.FireOff;
 				PRODUCT_NAME = FireOff;
 				SDKROOT = macosx;
@@ -646,6 +653,7 @@
 				DEVELOPMENT_TEAM = 79TR88QV2P;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -799,9 +807,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */ = {
+		C33C1DC426A87D3F00CF4487 /* XCRemoteSwiftPackageReference "Swifter" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:apmason/Swifter.git";
+			repositoryURL = "https://github.com/apmason/Swifter";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		C3FF767B26A878AE00C6E48A /* XCRemoteSwiftPackageReference "Swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apmason/Swifter";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -810,14 +826,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C3ABDE1026A75C9F0056CEE4 /* Swifter */ = {
+		C33C1D9026A87BE200CF4487 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */;
+			package = C3FF767B26A878AE00C6E48A /* XCRemoteSwiftPackageReference "Swifter" */;
 			productName = Swifter;
 		};
-		C3ABDE1326A75F3F0056CEE4 /* Swifter */ = {
+		C33C1DC526A87D3F00CF4487 /* Swifter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C3ABDE0F26A75C9F0056CEE4 /* XCRemoteSwiftPackageReference "Swifter" */;
+			package = C33C1DC426A87D3F00CF4487 /* XCRemoteSwiftPackageReference "Swifter" */;
+			productName = Swifter;
+		};
+		C3E38A8526A8863C002302A5 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C33C1DC426A87D3F00CF4487 /* XCRemoteSwiftPackageReference "Swifter" */;
 			productName = Swifter;
 		};
 /* End XCSwiftPackageProductDependency section */

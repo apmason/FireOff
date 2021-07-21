@@ -25,7 +25,7 @@ struct TweetView: View {
                     PlaceholderEditor(text: $tweetText, placeholderText: "Hey!", onChange: {
                         remainingCharacters = maxCharacters - tweetText.count
                     })
-                        .frame(alignment: .topLeading)
+                    .frame(alignment: .topLeading)
                     Divider()
                     Text("\(remainingCharacters)")
                 }
