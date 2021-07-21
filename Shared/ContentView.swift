@@ -12,12 +12,11 @@ struct ContentView: View {
     @ObservedObject var twitterModel: TwitterSignIn = TwitterSignIn.shared
     
     var body: some View {
-        ActivityView()
-//        if twitterModel.signedIn {
-//            TweetView()
-//        } else {
-//            SignInView()
-//        }
+        if twitterModel.signedIn {
+            TweetView()
+        } else {
+            SignInView()
+        }
     }
 }
 

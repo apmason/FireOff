@@ -24,13 +24,25 @@ class TwitterSignIn: NSObject, ObservableObject {
         return token?.screenName
     }
     
+    fileprivate let oauthKey = "key"
+    fileprivate let secretKey = "secret"
+    
     private override init() {}
     
     func signIn(completion: @escaping (TwitterError?) -> Void) {
-        swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
-        if swifter == nil {
-            print("FUUCk")
+        // We already have the keys stored, so make the Swifter object right away.
+        if let key = UserDefaults.standard.string(forKey: oauthKey),
+           let secret = UserDefaults.standard.string(forKey: secretKey) {
+            swifter = Swifter(consumerKey: Constants.consumerKey,
+                                   consumerSecret: Constants.consumerSecret,
+                                   oauthToken: key,
+                                   oauthTokenSecret: secret)
+            signedIn = true
+            completion(nil)
+            return
         }
+        
+        swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
         swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { token, response in
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -41,6 +53,13 @@ class TwitterSignIn: NSObject, ObservableObject {
             if httpResponse.statusCode == 200 {
                 self.signedIn = true
                 self.token = token
+                
+                guard let token = token else {
+                    return
+                }
+                
+                UserDefaults.standard.set(token.key, forKey: "key")
+                UserDefaults.standard.set(token.secret, forKey: "secret")
                 completion(nil)
             } else {
                 self.signedIn = false
