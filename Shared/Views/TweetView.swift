@@ -15,14 +15,22 @@ struct TweetView: View {
     @State private var sendingTweet: Bool = false
     @State private var errorAlert = ErrorAlert()
     
+    @ObservedObject var twitterModel: TwitterSignIn = TwitterSignIn.shared
+    
     var body: some View {
         ZStack {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 20) {
                     HStack {
-                        Text(TwitterSignIn.shared.userName ?? "Loading") //TODO: - Handle no username
+                        #if os(iOS)
+                        Image(uiImage: twitterModel.profileImage ?? UIImage())
+                        #elseif os(macOS)
+                        Image(nsImage: twitterModel.profileImage ?? NSImage())
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(20)
+                        #endif
                     }
-                    PlaceholderEditor(text: $tweetText, placeholderText: "Hey!", onChange: {
+                    PlaceholderEditor(text: $tweetText, placeholderText: "FireOff a tweet!", onChange: {
                         remainingCharacters = maxCharacters - tweetText.count
                     })
                     .frame(alignment: .topLeading)
@@ -32,7 +40,7 @@ struct TweetView: View {
                 Button("Tweet") {
                     guard !sendingTweet else { return } // prevent double taps
                     sendingTweet = true
-                    TwitterSignIn.shared.sendTweet(tweetText) { error in
+                    twitterModel.sendTweet(tweetText) { error in
                         sendingTweet = false
                         // Close out alert
                         guard let error = error else {
@@ -60,7 +68,7 @@ struct TweetView: View {
 }
 
 struct TweetView_Previews: PreviewProvider {
-    @State static var tweetText: String = "Hey!"
+    @State static var tweetText: String = "FireOff a tweet!"
     
     static var previews: some View {
         TweetView()

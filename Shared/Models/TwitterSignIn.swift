@@ -9,7 +9,11 @@ import Swifter
 import SwiftUI
 import Foundation
 import AuthenticationServices
-
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 class TwitterSignIn: NSObject, ObservableObject {
     
@@ -18,34 +22,67 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     @Published var signedIn: Bool = false
     
+    #if os(iOS)
+    @Published var profileImage: UIImage?
+    #elseif os(macOS)
+    @Published var profileImage: NSImage?
+    #endif
+    
     private var token: Credential.OAuthAccessToken?
     
     var userName: String? {
         return token?.screenName
     }
     
-    fileprivate let oauthKey = "key"
-    fileprivate let secretKey = "secret"
+    fileprivate let oauthKey = "twitter_oauth_key"
+    fileprivate let oauthSecretKey = "twitter_oauth_secret"
+    fileprivate let userIDSecret = "twitter_userID"
     
-    private override init() {}
-    
-    func signIn(completion: @escaping (TwitterError?) -> Void) {
+    private override init() {
+        super.init()
+        
         // We already have the keys stored, so make the Swifter object right away.
-        if let key = UserDefaults.standard.string(forKey: oauthKey),
-           let secret = UserDefaults.standard.string(forKey: secretKey) {
-            swifter = Swifter(consumerKey: Constants.consumerKey,
-                                   consumerSecret: Constants.consumerSecret,
-                                   oauthToken: key,
-                                   oauthTokenSecret: secret)
-            signedIn = true
-            completion(nil)
+        guard let key = UserDefaults.standard.string(forKey: oauthKey),
+              let secret = UserDefaults.standard.string(forKey: oauthSecretKey),
+              let userID = UserDefaults.standard.string(forKey: userIDSecret) else {
             return
         }
         
+        signedIn = true // TODO: Better way to observe the signed in state?
+        
+        swifter = Swifter(consumerKey: Constants.consumerKey,
+                          consumerSecret: Constants.consumerSecret,
+                          oauthToken: key,
+                          oauthTokenSecret: secret)
+        
+        // Get the user's information
+        swifter?.showUser(UserTag.id(userID), success: { json in
+            guard case let .object(dict) = json,
+                  let profilePath = dict["profile_image_url_https"],
+                  case let .string(path) = profilePath else {
+                print("Failed to get profile image URL")
+                return
+            }
+            
+            guard let imageURL = URL(string: path) else {
+                return
+            }
+            
+            self.downloadProfile(imageURL)
+            
+        }, failure: { error in
+            print("There was an error getting user info")
+            // TODO: - Call authentication route to make sure we're signed in properly
+        })
+    }
+    
+    /// TODO: - Add another function here that sees if the user is logged in with the right credentials. If not, clear out UserDefaults and set the state to signed out so we can exit.
+    
+    func signIn(completion: @escaping (TwitterError?) -> Void) {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
-        swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { token, response in
-            guard let httpResponse = response as? HTTPURLResponse else {
+        swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { [weak self] token, response in
+            guard let self = self, let httpResponse = response as? HTTPURLResponse else {
                 completion(.networkError)
                 return
             }
@@ -58,8 +95,10 @@ class TwitterSignIn: NSObject, ObservableObject {
                     return
                 }
                 
-                UserDefaults.standard.set(token.key, forKey: "key")
-                UserDefaults.standard.set(token.secret, forKey: "secret")
+                UserDefaults.standard.set(token.key, forKey: self.oauthKey)
+                UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
+                UserDefaults.standard.set(token.userID, forKey: self.userIDSecret)
+                
                 completion(nil)
             } else {
                 self.signedIn = false
@@ -87,6 +126,9 @@ class TwitterSignIn: NSObject, ObservableObject {
             print("Analyzing the result: \(result.description)")
             completion(nil)
         }, failure: { error in
+            // call verifyAccountCredentials. Did the post fail because the user wasn't verified? Check here. If that is the case, then sign out, so the user can reauthorize.
+            // Otherwise just post the result back to the user.
+            
             // pop this error back to the user
             print("Error posting my tweet!: \(error.localizedDescription)")
             completion(error)
@@ -98,5 +140,26 @@ extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
     
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return ASPresentationAnchor()
+    }
+}
+
+extension TwitterSignIn {
+    
+    /// Downloads the user's profile image
+    private func downloadProfile(_ url: URL) {
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self, error == nil, let data = data else {
+                print("Error downloading photo: \(String(describing: error?.localizedDescription))")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                #if os(iOS)
+                self.profileImage = UIImage(data: data)
+                #elseif os(macOS)
+                self.profileImage = NSImage(data: data)
+                #endif
+            }
+        }.resume()
     }
 }
