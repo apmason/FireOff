@@ -18,9 +18,10 @@ struct TweetView: View {
     private var twitterModel: TwitterSignIn = TwitterSignIn.shared
     
     var body: some View {
-        VStack {
-            HStack {
+        VStack(alignment: .center) {
+            HStack(alignment: .center) {
                 Image(systemName: "gear")
+                    .resizable()
                     .frame(width: 30, height: 30, alignment: .leading)
                     .padding(15)
                 Spacer()
@@ -45,15 +46,26 @@ struct TweetView: View {
             }
             .padding(.horizontal, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
             
-            HStack(alignment: .top, spacing: 20, content: {
+            HStack(alignment: .top, spacing: 10, content: {
                 ProfileImage()
                     .frame(width: 30, height: 30)
                     .cornerRadius(15)
                 
-                PlaceholderEditor(text: $tweetText, placeholderText: "FireOff a tweet!", onChange: {
-                    remainingCharacters = maxCharacters - tweetText.count
-                })
+                //Text("Hello?")
+                
+                ZStack(alignment: .topLeading) {
+                    PlaceholderEditor(text: $tweetText, placeholderText: "FireOff a tweet!", onChange: {
+                        remainingCharacters = maxCharacters - tweetText.count
+                    })
+                    .frame(alignment: .topLeading)
+                    //                        .frame(width: 100,
+                    //                               height: 100,
+                    //                               alignment: .topLeading)
+                    Color.blue.opacity(0.3)
+                }
             })
+            .padding(.horizontal, 10)
+            Spacer()
         }
     }
 }

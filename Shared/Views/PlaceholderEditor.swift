@@ -16,7 +16,7 @@ struct PlaceholderEditor: View {
     
     var editorTopPadding: CGFloat {
         #if os(iOS)
-        return -5
+        return 0
         #else
         return 0
         #endif
@@ -24,7 +24,7 @@ struct PlaceholderEditor: View {
     
     var placeholderTopPadding: CGFloat {
         #if os(iOS)
-        return 8
+        return 0
         #else
         return 0
         #endif
@@ -32,7 +32,7 @@ struct PlaceholderEditor: View {
     
     var placeholderLeadingPadding: CGFloat {
         #if os(iOS)
-        return 0
+        return 5
         #else
         return 5
         #endif
@@ -49,6 +49,7 @@ struct PlaceholderEditor: View {
                     onChange?()
                 }
                 .padding(.leading, editorTopPadding)
+                .background(Color.orange.opacity(0.3))
                 
             if showPlaceholder {
                 Text(placeholderText)
@@ -56,8 +57,10 @@ struct PlaceholderEditor: View {
                     .foregroundColor(AppColors.placeholderTextColor)
                     .padding(.top, placeholderTopPadding)
                     .padding(.leading, placeholderLeadingPadding)
+                    .background(Color.yellow.opacity(0.3))
             }
         }
+        .background(Color.red.opacity(0.3))
     }
 }
 
