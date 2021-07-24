@@ -41,14 +41,13 @@ struct PlaceholderEditor: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             TextEditor(text: $text)
+                .multilineTextAlignment(.leading)
                 .font(.body)
                 .foregroundColor(.black)
                 .onChange(of: text) { value in
                     showPlaceholder = text == ""
                     onChange?()
                 }
-                .multilineTextAlignment(.leading)
-                .frame(minHeight: 30, alignment: .leading)
                 .padding(.leading, editorTopPadding)
                 
             if showPlaceholder {

@@ -15,28 +15,15 @@ struct TweetView: View {
     @State private var sendingTweet: Bool = false
     @State private var errorAlert = ErrorAlert()
     
-    @ObservedObject var twitterModel: TwitterSignIn = TwitterSignIn.shared
+    private var twitterModel: TwitterSignIn = TwitterSignIn.shared
     
     var body: some View {
-        ZStack {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack {
-                        #if os(iOS)
-                        Image(uiImage: twitterModel.profileImage ?? UIImage())
-                        #elseif os(macOS)
-                        Image(nsImage: twitterModel.profileImage ?? NSImage())
-                            .frame(width: 40, height: 40)
-                            .cornerRadius(20)
-                        #endif
-                    }
-                    PlaceholderEditor(text: $tweetText, placeholderText: "FireOff a tweet!", onChange: {
-                        remainingCharacters = maxCharacters - tweetText.count
-                    })
-                    .frame(alignment: .topLeading)
-                    Divider()
-                    Text("\(remainingCharacters)")
-                }
+        VStack {
+            HStack {
+                Image(systemName: "gear")
+                    .frame(width: 30, height: 30, alignment: .leading)
+                    .padding(15)
+                Spacer()
                 Button("Tweet") {
                     guard !sendingTweet else { return } // prevent double taps
                     sendingTweet = true
@@ -51,19 +38,23 @@ struct TweetView: View {
                         errorAlert.showAlert(for: error)
                     }
                 }
-                .disabled(remainingCharacters < 0)
+                .disabled(remainingCharacters < 0 || remainingCharacters == 240)
+                .frame(height: 30, alignment: .trailing)
+                .padding(15)
+                .cornerRadius(15)
             }
-            .padding(20)
+            .padding(.horizontal, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
             
-            if sendingTweet {
-                ActivityView()
-            }
+            HStack(alignment: .top, spacing: 20, content: {
+                ProfileImage()
+                    .frame(width: 30, height: 30)
+                    .cornerRadius(15)
+                
+                PlaceholderEditor(text: $tweetText, placeholderText: "FireOff a tweet!", onChange: {
+                    remainingCharacters = maxCharacters - tweetText.count
+                })
+            })
         }
-        .alert(isPresented: $errorAlert.showAlert, content: {
-            Alert(title: Text("Oh no!"), message: Text("Error sending tweet: \(errorAlert.errorString)"), dismissButton: .cancel(Text("Okay"), action: {
-                self.errorAlert.reset()
-            }))
-        })
     }
 }
 
