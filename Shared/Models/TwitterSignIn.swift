@@ -28,6 +28,26 @@ class TwitterSignIn: NSObject, ObservableObject {
     @Published var profileImage: NSImage?
     #endif
     
+    @Published var sendingTweet: Bool = false {
+        didSet {
+            self.updateButtonState()
+        }
+    }
+    
+    // TODO: - Tests for here
+    @Published var tweetText: String = "" {
+        didSet {
+            self.remainingCharacters = 240 - tweetText.count
+            self.updateButtonState()
+        }
+    }
+    
+    @Published var canSend: Bool = false
+
+    // TODO: - Test to make sure this is 240 to start with
+    // TODO: - @Question - can I have 240 be a reference to a private variable, or something like that?
+    @Published private(set) var remainingCharacters: Int = 240
+    
     private var token: Credential.OAuthAccessToken?
     
     var userName: String? {
@@ -49,6 +69,7 @@ class TwitterSignIn: NSObject, ObservableObject {
         }
         
         signedIn = true // TODO: Better way to observe the signed in state?
+        updateButtonState()
         
         swifter = Swifter(consumerKey: Constants.consumerKey,
                           consumerSecret: Constants.consumerSecret,
@@ -74,6 +95,10 @@ class TwitterSignIn: NSObject, ObservableObject {
             print("There was an error getting user info")
             // TODO: - Call authentication route to make sure we're signed in properly
         })
+    }
+    
+    private func updateButtonState() {
+        canSend = tweetText.count > 0 && remainingCharacters >= 0 && sendingTweet == false
     }
     
     /// TODO: - Add another function here that sees if the user is logged in with the right credentials. If not, clear out UserDefaults and set the state to signed out so we can exit.
@@ -115,23 +140,37 @@ class TwitterSignIn: NSObject, ObservableObject {
         })
     }
     
-    func sendTweet(_ tweet: String, completion: @escaping (Error?) -> Void) {
-        guard tweet.count <= 240 else {
+    func sendTweet() {
+        guard tweetText.count <= 240 else {
             assertionFailure("This shouldn't happen!")
             return
         }
         
-        swifter?.postTweet(status: tweet, success: { result in
-            // analyze this result
-            print("Analyzing the result: \(result.description)")
-            completion(nil)
+        guard !self.sendingTweet else {
+            return
+        }
+        
+        self.sendingTweet = true
+        
+        swifter?.postTweet(status: tweetText, success: { result in
+            self.sendingTweet = false
+            self.tweetText = ""
+            
+            print("Tweet sent: \(result)")
+            
+            // TODO: - Have the view listen to an error poster!
+            //completion(nil)
         }, failure: { error in
-            // call verifyAccountCredentials. Did the post fail because the user wasn't verified? Check here. If that is the case, then sign out, so the user can reauthorize.
+            self.sendingTweet = false
+
+            // TODO: - call verifyAccountCredentials. Did the post fail because the user wasn't verified? Check here. If that is the case, then sign out, so the user can reauthorize.
             // Otherwise just post the result back to the user.
             
             // pop this error back to the user
             print("Error posting my tweet!: \(error.localizedDescription)")
-            completion(error)
+            
+            // TODO: - Have the view listen to an error poster!
+            //completion(error)
         })
     }
 }

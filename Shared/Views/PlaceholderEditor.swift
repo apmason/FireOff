@@ -14,28 +14,25 @@ struct PlaceholderEditor: View {
     var placeholderText: String
     var onChange: (() -> Void)?
     
+    // TODO: - Fix all these padding changes
     var editorTopPadding: CGFloat {
         #if os(iOS)
-        return 0
+        return -7
         #else
         return 0
         #endif
     }
     
-    var placeholderTopPadding: CGFloat {
+    var editorLeadingPadding: CGFloat {
         #if os(iOS)
-        return 0
+        return -3.5
         #else
         return 0
         #endif
     }
     
     var placeholderLeadingPadding: CGFloat {
-        #if os(iOS)
-        return 5
-        #else
-        return 5
-        #endif
+        return 3.5
     }
     
     var body: some View {
@@ -48,16 +45,16 @@ struct PlaceholderEditor: View {
                     showPlaceholder = text == ""
                     onChange?()
                 }
-                .padding(.leading, editorTopPadding)
-                .background(Color.orange.opacity(0.3))
+                .frame(alignment: .topLeading)
+                .padding(.top, editorTopPadding)
+                .padding(.leading, editorLeadingPadding)
                 
             if showPlaceholder {
                 Text(placeholderText)
                     .font(.body)
                     .foregroundColor(AppColors.placeholderTextColor)
-                    .padding(.top, placeholderTopPadding)
+                    .frame(alignment: .topLeading)
                     .padding(.leading, placeholderLeadingPadding)
-                    .background(Color.yellow.opacity(0.3))
             }
         }
         .background(Color.red.opacity(0.3))

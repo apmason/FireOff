@@ -37,6 +37,8 @@
 		C3ABDE1526A774840056CEE4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB8C26A7294300CAE4DD /* Colors.swift */; };
 		C3ABDE1626A774900056CEE4 /* TwitterError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB9A26A73E5300CAE4DD /* TwitterError.swift */; };
 		C3E38A8626A8863C002302A5 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C3E38A8526A8863C002302A5 /* Swifter */; };
+		C3F48BAC26ADC5C00062BC3A /* TopTweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F48BAB26ADC5C00062BC3A /* TopTweetView.swift */; };
+		C3F48BAD26ADC5C00062BC3A /* TopTweetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F48BAB26ADC5C00062BC3A /* TopTweetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,7 @@
 		C380EB5426A5E0AB00CAE4DD /* TweetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetView.swift; sourceTree = "<group>"; };
 		C380EB8C26A7294300CAE4DD /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		C380EB9A26A73E5300CAE4DD /* TwitterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterError.swift; sourceTree = "<group>"; };
+		C3F48BAB26ADC5C00062BC3A /* TopTweetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopTweetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +211,7 @@
 				C37919FB26AB27EF00D1FFD9 /* ProfileImage.swift */,
 				C380EB5426A5E0AB00CAE4DD /* TweetView.swift */,
 				C312BABF26A612AD001E8B71 /* PlaceholderEditor.swift */,
+				C3F48BAB26ADC5C00062BC3A /* TopTweetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -394,6 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3F48BAC26ADC5C00062BC3A /* TopTweetView.swift in Sources */,
 				C30A420626A35B7200472D64 /* ContentView.swift in Sources */,
 				C37919FC26AB27EF00D1FFD9 /* ProfileImage.swift in Sources */,
 				C380EB8D26A7294300CAE4DD /* Colors.swift in Sources */,
@@ -413,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3F48BAD26ADC5C00062BC3A /* TopTweetView.swift in Sources */,
 				C30A420726A35B7200472D64 /* ContentView.swift in Sources */,
 				C37919FD26AB27EF00D1FFD9 /* ProfileImage.swift in Sources */,
 				C3ABDE1526A774840056CEE4 /* Colors.swift in Sources */,
