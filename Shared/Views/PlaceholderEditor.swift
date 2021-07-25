@@ -32,7 +32,11 @@ struct PlaceholderEditor: View {
     }
     
     var placeholderLeadingPadding: CGFloat {
+        #if os(iOS)
+        return 0
+        #else
         return 3.5
+        #endif
     }
     
     var body: some View {
