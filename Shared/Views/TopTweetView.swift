@@ -9,23 +9,30 @@ import SwiftUI
 
 struct TopTweetView: View {
     @ObservedObject var twitterModel: TwitterSignIn
+    @State private var showLogoutSheet = false
     
     var body: some View {
         HStack(alignment: .center) {
-            Image(systemName: "gear")
-                .resizable()
-                .frame(width: 30,
-                       height: 30,
-                       alignment: .leading)
+            Button {
+                showLogoutSheet = true
+            } label: {
+                Text("Logout")
+            }
+            .modifier(LogoutSheet(presented: $showLogoutSheet,
+                                       twitterModel: twitterModel))
+            
             Spacer()
+            
             
             Button("Send Tweet") {
                 twitterModel.sendTweet()
             }
             // @ALEX - View holds the logic of remainingCharacters
             .disabled(!twitterModel.canSend) // NOTE NEEDS TO CHANGE
-            .frame(height: 30, alignment: .trailing)
-            .cornerRadius(15)
+            .padding(10)
+            .foregroundColor(Color.white)
+            .background(Color.blue)
+            .cornerRadius(5) // @ALEX: New SwiftUI button type?
         }
     }
 }

@@ -107,35 +107,41 @@ class TwitterSignIn: NSObject, ObservableObject {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
         swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { [weak self] token, response in
-            guard let self = self, let httpResponse = response as? HTTPURLResponse else {
-                completion(.networkError)
-                return
-            }
-            
-            if httpResponse.statusCode == 200 {
-                self.signedIn = true
-                self.token = token
-                
-                guard let token = token else {
+            // @ALEX: Is this the best way to do this? Using operators instead?
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, let httpResponse = response as? HTTPURLResponse else {
+                    completion(.networkError)
                     return
                 }
                 
-                UserDefaults.standard.set(token.key, forKey: self.oauthKey)
-                UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
-                UserDefaults.standard.set(token.userID, forKey: self.userIDSecret)
-                
-                completion(nil)
-            } else {
-                self.signedIn = false
-                completion(.apiError(statusCode: httpResponse.statusCode))
+                if httpResponse.statusCode == 200 {
+                    self.signedIn = true
+                    self.token = token
+                    
+                    guard let token = token else {
+                        return
+                    }
+                    
+                    UserDefaults.standard.set(token.key, forKey: self.oauthKey)
+                    UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
+                    UserDefaults.standard.set(token.userID, forKey: self.userIDSecret)
+                    
+                    completion(nil)
+                } else {
+                    self.signedIn = false
+                    completion(.apiError(statusCode: httpResponse.statusCode))
+                }
             }
         }, failure: { error in
-            self.signedIn = false
-            let webError = ASWebAuthenticationSessionError(_nsError: (error as NSError))
-            if webError.code == ASWebAuthenticationSessionError.Code.canceledLogin {
-                completion(.sessionCancelled)
-            } else {
-                completion(.swiftError(error))
+            // @ALEX: [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+            DispatchQueue.main.async {
+                self.signedIn = false
+                let webError = ASWebAuthenticationSessionError(_nsError: (error as NSError))
+                if webError.code == ASWebAuthenticationSessionError.Code.canceledLogin {
+                    completion(.sessionCancelled)
+                } else {
+                    completion(.swiftError(error))
+                }
             }
         })
     }
@@ -172,6 +178,14 @@ class TwitterSignIn: NSObject, ObservableObject {
             // TODO: - Have the view listen to an error poster!
             //completion(error)
         })
+    }
+    
+    func logout() {
+        UserDefaults.standard.set(nil, forKey: self.oauthKey)
+        UserDefaults.standard.set(nil, forKey: self.oauthSecretKey)
+        UserDefaults.standard.set(nil, forKey: self.userIDSecret)
+        
+        signedIn = false
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignInView: View {
     @State private var errorAlert = ErrorAlert()
-    @State private var signingIn: Bool = false
+    @State private var signingIn: Bool = false // @ALEX update this so the Model-View connection is more similar to TweetView (we shouldn't track the state in the view, the model handles all that)).
     
     var body: some View {
         ZStack {
