@@ -13,7 +13,7 @@ struct TweetView: View {
     
     var body: some View {
         ZStack {
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 20) {
                 TopTweetView(twitterModel: twitterModel)
                 HStack(alignment: .top, spacing: 10, content: {
                     ProfileImage(twitterModel: twitterModel)
@@ -22,12 +22,12 @@ struct TweetView: View {
                     PlaceholderEditor(text: $twitterModel.tweetText, placeholderText: "FireOff a tweet!")
                         .frame(alignment: .topLeading)
                 })
-                .padding(.horizontal, 20)
                 
                 Divider()
                 Text("\(twitterModel.remainingCharacters)")
             }
-            
+            .padding(20)
+        
             if twitterModel.sendingTweet {
                 ActivityView()
             }
