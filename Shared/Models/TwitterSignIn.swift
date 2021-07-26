@@ -15,6 +15,8 @@ import UIKit
 import AppKit
 #endif
 
+typealias Success = Bool
+
 class TwitterSignIn: NSObject, ObservableObject {
     
     private var swifter: Swifter?    
@@ -145,7 +147,8 @@ class TwitterSignIn: NSObject, ObservableObject {
         
         self.sendingTweet = true
         
-        swifter?.postTweet(status: tweetText, success: { result in
+        swifter?.postTweet(status: tweetText, success: { [weak self] result in
+            guard let self = self else { return }
             self.sendingTweet = false
             self.tweetText = ""
             
@@ -153,7 +156,8 @@ class TwitterSignIn: NSObject, ObservableObject {
             
             // TODO: - Have the view listen to an error poster!
             //completion(nil)
-        }, failure: { error in
+        }, failure: { [weak self] error in
+            guard let self = self else { return }
             self.sendingTweet = false
 
             // Do a second check just to make sure that the user's credentials weren't cleared out in between the first login and now. We'll logout if there is an issue. Otherwise, present an error to the user.
@@ -163,9 +167,17 @@ class TwitterSignIn: NSObject, ObservableObject {
             
             // pop this error back to the user
             print("Error posting my tweet!: \(error.localizedDescription)")
-            
-            // TODO: - Have the view listen to an error poster!
-            //completion(error)
+            // NEXT TODO: - Test this failure
+            self.verifyCredentials { [weak self] success in
+                guard let self = self else { return }
+                // The user was verified but
+                if success {
+                    self.activeAlert.createAlert(title: "Oops!",
+                                                 message: "Tweet failed to send",
+                                                 buttonText: "Okay",
+                                                 buttonAction: nil)
+                }
+            }
         })
     }
     
@@ -187,17 +199,21 @@ class TwitterSignIn: NSObject, ObservableObject {
      */
     
     // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
-    private func verifyCredentials() {
+    
+    /// Verify a signed in Twitter user's credentials. If the verification fails an error will be presented and the user will be logged out right immediately.
+    private func verifyCredentials(completion: ((Success) -> Void)?=nil) {
         swifter?.verifyAccountCredentials(success: { response in
             // TODO: - Don't need to do anything on success, should we just not have this callback?
+            completion?(true)
             
         }, failure: { error in
             print("error authorizing user: \(error.localizedDescription)") // @ALEX: - Turn all print statements into debug statements of varying levels. What's the best logging facility, what is actually useful?
-            
             self.activeAlert.createAlert(title: "Session expired!", message: "You'll need to log back in", buttonText: "Okay") {
                 print("We exited")
                 self.logout()
             }
+            
+            completion?(false)
         })
     }
     
