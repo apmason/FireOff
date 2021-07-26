@@ -24,6 +24,8 @@
 		C33C1DC626A87D3F00CF4487 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = C33C1DC526A87D3F00CF4487 /* Swifter */; };
 		C37919FC26AB27EF00D1FFD9 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37919FB26AB27EF00D1FFD9 /* ProfileImage.swift */; };
 		C37919FD26AB27EF00D1FFD9 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37919FB26AB27EF00D1FFD9 /* ProfileImage.swift */; };
+		C37E1DD826AF594500EFAF69 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37E1DD726AF594500EFAF69 /* ImageSaver.swift */; };
+		C37E1DD926AF594500EFAF69 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37E1DD726AF594500EFAF69 /* ImageSaver.swift */; };
 		C380EB3F26A4D05F00CAE4DD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */; };
 		C380EB4026A4D05F00CAE4DD /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */; };
 		C380EB4A26A5DF5D00CAE4DD /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C380EB4926A5DF5D00CAE4DD /* SignInView.swift */; };
@@ -79,6 +81,7 @@
 		C30A422F26A365A600472D64 /* TwitterSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterSignIn.swift; sourceTree = "<group>"; };
 		C312BABF26A612AD001E8B71 /* PlaceholderEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderEditor.swift; sourceTree = "<group>"; };
 		C37919FB26AB27EF00D1FFD9 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
+		C37E1DD726AF594500EFAF69 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		C380EB3E26A4D05F00CAE4DD /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		C380EB4926A5DF5D00CAE4DD /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		C380EB5426A5E0AB00CAE4DD /* TweetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetView.swift; sourceTree = "<group>"; };
@@ -142,10 +145,10 @@
 			children = (
 				C380EB8B26A7293A00CAE4DD /* UI */,
 				C380EB2E26A4D04500CAE4DD /* Views */,
-				C30A422426A362D700472D64 /* Constants.swift */,
 				C30A422326A361A900472D64 /* Models */,
 				C30A41DB26A35B7100472D64 /* FireOffApp.swift */,
 				C30A41DC26A35B7100472D64 /* ContentView.swift */,
+				C30A422426A362D700472D64 /* Constants.swift */,
 				C30A41DD26A35B7200472D64 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -203,6 +206,7 @@
 				C30A422F26A365A600472D64 /* TwitterSignIn.swift */,
 				C380EB9A26A73E5300CAE4DD /* TwitterError.swift */,
 				C3B5ABFE26AEF06100EBD888 /* ActiveAlert.swift */,
+				C37E1DD726AF594500EFAF69 /* ImageSaver.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -409,6 +413,7 @@
 				C3B5ABFF26AEF06100EBD888 /* ActiveAlert.swift in Sources */,
 				C380EB9B26A73E5300CAE4DD /* TwitterError.swift in Sources */,
 				C380EB4A26A5DF5D00CAE4DD /* SignInView.swift in Sources */,
+				C37E1DD826AF594500EFAF69 /* ImageSaver.swift in Sources */,
 				C30A423026A365A600472D64 /* TwitterSignIn.swift in Sources */,
 				C30A420426A35B7200472D64 /* FireOffApp.swift in Sources */,
 				C312BAC026A612AD001E8B71 /* PlaceholderEditor.swift in Sources */,
@@ -430,6 +435,7 @@
 				C3B5AC0026AEF06100EBD888 /* ActiveAlert.swift in Sources */,
 				C3ABDE1626A774900056CEE4 /* TwitterError.swift in Sources */,
 				C380EB4B26A5DF5D00CAE4DD /* SignInView.swift in Sources */,
+				C37E1DD926AF594500EFAF69 /* ImageSaver.swift in Sources */,
 				C30A423126A365A600472D64 /* TwitterSignIn.swift in Sources */,
 				C30A420526A35B7200472D64 /* FireOffApp.swift in Sources */,
 				C312BAC126A612AE001E8B71 /* PlaceholderEditor.swift in Sources */,

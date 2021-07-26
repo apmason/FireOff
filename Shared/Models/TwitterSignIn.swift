@@ -79,6 +79,8 @@ class TwitterSignIn: NSObject, ObservableObject {
                           oauthToken: key,
                           oauthTokenSecret: secret)
         
+        setSavedImage()
+        
         signedIn = true // TODO: Better way to observe the signed in state?
         
         verifyCredentials(fetchProfileImage: true, completion: { success in
@@ -250,6 +252,8 @@ extension TwitterSignIn {
                 return
             }
             
+            ImageSaver.saveImage(data)
+            
             DispatchQueue.main.async {
                 #if os(iOS)
                 self.profileImage = UIImage(data: data)
@@ -258,5 +262,19 @@ extension TwitterSignIn {
                 #endif
             }
         }.resume()
+    }
+    
+    private func setSavedImage() {
+        guard let data = ImageSaver.retrieveImageData() else {
+            return
+        }
+                
+        DispatchQueue.main.async {
+            #if os(iOS)
+            self.profileImage = UIImage(data: data)
+            #elseif os(macOS)
+            self.profileImage = NSImage(data: data)
+            #endif
+        }
     }
 }
