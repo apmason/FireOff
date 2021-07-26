@@ -22,6 +22,9 @@ struct TweetView: View {
                     PlaceholderEditor(text: $twitterModel.tweetText, placeholderText: "FireOff a tweet!")
                         .frame(alignment: .topLeading)
                 })
+                .alert(isPresented: $twitterModel.activeAlert.showAlert) {
+                    return twitterModel.activeAlert.alert ?? Alert(title: Text("A default error occured"))
+                }
                 
                 Divider()
                 Text("\(twitterModel.remainingCharacters)")
@@ -31,10 +34,6 @@ struct TweetView: View {
             if twitterModel.sendingTweet {
                 ActivityView()
             }
-        }
-        .alert(isPresented: $twitterModel.activeAlert.showAlert) {
-            print("Showing an alert")
-            return twitterModel.activeAlert.alert ?? Alert(title: Text("A default error occured"))
         }
     }
 }

@@ -70,8 +70,7 @@ class TwitterSignIn: NSObject, ObservableObject {
         
         // We already have the keys stored, so make the Swifter object right away.
         guard let key = UserDefaults.standard.string(forKey: oauthKey),
-              let secret = UserDefaults.standard.string(forKey: oauthSecretKey),
-              let userID = UserDefaults.standard.string(forKey: userIDKey) else {
+              let secret = UserDefaults.standard.string(forKey: oauthSecretKey) else {
             return
         }
                 
@@ -82,13 +81,11 @@ class TwitterSignIn: NSObject, ObservableObject {
         
         signedIn = true // TODO: Better way to observe the signed in state?
         
-        // NOTE: - ONE OF THESE WILL BE DELETED!!
-        verifyCredentials(completion: { success in
+        verifyCredentials(fetchProfileImage: true, completion: { success in
             if !success {
                 self.createSessionExpiredAlert()
             }
         })
-        getProfilePhoto(for: userID)
     }
     
     // @ALEX This is an ugly function, how can we make it nicer?
@@ -103,18 +100,12 @@ class TwitterSignIn: NSObject, ObservableObject {
                     return
                 }
                 
-                if httpResponse.statusCode == 200 {
+                if httpResponse.statusCode == 200, let token = token {
                     self.signedIn = true
                     self.token = token
                     
-                    guard let token = token, let userID = token.userID else {
-                        return
-                    }
-                    
-                    /// NOTE: - Here, we will delete one of the two below functions. Either don't call verifyCredentials here (because we're already logged in, so we don't need to) or, remove getProfilePhoto(for:) because we can get the profile from verify credentials, so why duplicate calls (need to verify we always get the profile back)
-                    self.getProfilePhoto(for: userID)
                     // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
-                    self.verifyCredentials(completion: { success in
+                    self.verifyCredentials(fetchProfileImage: true, completion: { success in
                         if !success {
                             self.createSessionExpiredAlert()
                         }
@@ -168,7 +159,7 @@ class TwitterSignIn: NSObject, ObservableObject {
             
             print("Error posting my tweet!: \(error.localizedDescription)")
             // See if the user's token is still valid. If it is, say we failed to send the tweet. If it's not, tell them we need them to re-auth.
-            self.verifyCredentials { [weak self] success in
+            self.verifyCredentials(fetchProfileImage: false) { [weak self] success in
                 guard let self = self else { return }
                 // The user was verified but
                 if success {
@@ -201,8 +192,24 @@ class TwitterSignIn: NSObject, ObservableObject {
     // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
     
     /// Verify a signed in Twitter user's credentials. If the verification fails an error will be presented and the user will be logged out right immediately.
-    private func verifyCredentials(completion: @escaping ((Success) -> Void)) {
-        swifter?.verifyAccountCredentials(success: { response in
+    /// - Parameter fetchProfileImage: A Boolean value determining if a succesful response should download the latest profile image URL.
+    /// - Parameter completion: A closure that is passed a `Success` value and returns nothing. `Success` will be `true` if the user was verified succesfully and `false` otherwise.
+    private func verifyCredentials(fetchProfileImage: Bool, completion: @escaping ((Success) -> Void)) {
+        swifter?.verifyAccountCredentials(success: { json in
+            // Should we fetch the profile photo in here?
+            print("Verifying account, response is \(json)")
+            if fetchProfileImage {
+                guard case .object(let dict) = json,
+                      let profilePath = dict["profile_image_url_https"],
+                      case .string(let path) = profilePath,
+                      let imageURL = URL(string: path) else {
+                    print("Failed to get profile image URL")
+                    return
+                }
+                
+                self.downloadProfileImage(imageURL)
+            }
+            
             // TODO: - Don't need to do anything on success, should we just not have this callback?
             completion(true)
         }, failure: { error in
@@ -235,30 +242,8 @@ extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
 
 extension TwitterSignIn {
     
-    private func getProfilePhoto(for userID: String) {
-        // Get the user's information
-        swifter?.showUser(UserTag.id(userID), success: { json in
-            guard case let .object(dict) = json,
-                  let profilePath = dict["profile_image_url_https"],
-                  case let .string(path) = profilePath else {
-                print("Failed to get profile image URL")
-                return
-            }
-            
-            guard let imageURL = URL(string: path) else {
-                return
-            }
-            
-            self.downloadProfile(imageURL)
-            
-        }, failure: { error in
-            print("There was an error getting user info")
-            // TODO: - Call authentication route to make sure we're signed in properly
-        })
-    }
-    
     /// Downloads the user's profile image
-    private func downloadProfile(_ url: URL) {
+    private func downloadProfileImage(_ url: URL) {
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, error == nil, let data = data else {
                 print("Error downloading photo: \(String(describing: error?.localizedDescription))")
