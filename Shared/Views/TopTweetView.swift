@@ -27,8 +27,7 @@ struct TopTweetView: View {
             Button("Send Tweet") {
                 twitterModel.sendTweet()
             }
-            // @ALEX - View holds the logic of remainingCharacters
-            .disabled(!twitterModel.canSend) // NOTE NEEDS TO CHANGE
+            .disabled(!twitterModel.canSend)
             .padding(10)
             .foregroundColor(Color.white)
             .background(Color.blue)

@@ -83,7 +83,11 @@ class TwitterSignIn: NSObject, ObservableObject {
         signedIn = true // TODO: Better way to observe the signed in state?
         
         // NOTE: - ONE OF THESE WILL BE DELETED!!
-        verifyCredentials()
+        verifyCredentials(completion: { success in
+            if !success {
+                self.createSessionExpiredAlert()
+            }
+        })
         getProfilePhoto(for: userID)
     }
     
@@ -109,7 +113,12 @@ class TwitterSignIn: NSObject, ObservableObject {
                     
                     /// NOTE: - Here, we will delete one of the two below functions. Either don't call verifyCredentials here (because we're already logged in, so we don't need to) or, remove getProfilePhoto(for:) because we can get the profile from verify credentials, so why duplicate calls (need to verify we always get the profile back)
                     self.getProfilePhoto(for: userID)
-                    self.verifyCredentials() // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
+                    // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
+                    self.verifyCredentials(completion: { success in
+                        if !success {
+                            self.createSessionExpiredAlert()
+                        }
+                    })
                     
                     UserDefaults.standard.set(token.key, forKey: self.oauthKey)
                     UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
@@ -153,21 +162,12 @@ class TwitterSignIn: NSObject, ObservableObject {
             self.tweetText = ""
             
             print("Tweet sent: \(result)")
-            
-            // TODO: - Have the view listen to an error poster!
-            //completion(nil)
         }, failure: { [weak self] error in
             guard let self = self else { return }
             self.sendingTweet = false
-
-            // Do a second check just to make sure that the user's credentials weren't cleared out in between the first login and now. We'll logout if there is an issue. Otherwise, present an error to the user.
-            // SwiftUI error presenter?
-            // TODO: - call verifyAccountCredentials. Did the post fail because the user wasn't verified? Check here. If that is the case, then sign out, so the user can reauthorize.
-            // Otherwise just post the result back to the user.
             
-            // pop this error back to the user
             print("Error posting my tweet!: \(error.localizedDescription)")
-            // NEXT TODO: - Test this failure
+            // See if the user's token is still valid. If it is, say we failed to send the tweet. If it's not, tell them we need them to re-auth.
             self.verifyCredentials { [weak self] success in
                 guard let self = self else { return }
                 // The user was verified but
@@ -175,7 +175,12 @@ class TwitterSignIn: NSObject, ObservableObject {
                     self.activeAlert.createAlert(title: "Oops!",
                                                  message: "Tweet failed to send",
                                                  buttonText: "Okay",
-                                                 buttonAction: nil)
+                                                 buttonAction: {
+                                                    // We don't need to do anything in here, but we want our button to be clickable
+                                                 })
+                } else {
+                    // TODO: present an alert that we need to log the user out. On button tap we'll log them out.
+                    self.createSessionExpiredAlert()
                 }
             }
         })
@@ -190,31 +195,26 @@ class TwitterSignIn: NSObject, ObservableObject {
     }
     
     /**
-     func checkLogin() {
-     // if it's succesful present an error to the user that it was a temporary network issue.
-     // if it's a real auth issue, present an error saying that the user needs to be logged out. Present an alert saying that we're logging them out, then log them out.
-     
      // call logout on acceptance. Would it be best to chain that together with Combine? How to really use Combine to chain things together?
-     }
      */
     
     // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
     
     /// Verify a signed in Twitter user's credentials. If the verification fails an error will be presented and the user will be logged out right immediately.
-    private func verifyCredentials(completion: ((Success) -> Void)?=nil) {
+    private func verifyCredentials(completion: @escaping ((Success) -> Void)) {
         swifter?.verifyAccountCredentials(success: { response in
             // TODO: - Don't need to do anything on success, should we just not have this callback?
-            completion?(true)
-            
+            completion(true)
         }, failure: { error in
             print("error authorizing user: \(error.localizedDescription)") // @ALEX: - Turn all print statements into debug statements of varying levels. What's the best logging facility, what is actually useful?
-            self.activeAlert.createAlert(title: "Session expired!", message: "You'll need to log back in", buttonText: "Okay") {
-                print("We exited")
-                self.logout()
-            }
-            
-            completion?(false)
+            completion(false)
         })
+    }
+    
+    private func createSessionExpiredAlert() {
+        self.activeAlert.createAlert(title: "Session expired!", message: "You'll need to log back in", buttonText: "Okay") { [weak self] in
+            self?.logout()
+        }
     }
     
     private func updateCanSendState() {
