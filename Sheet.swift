@@ -19,7 +19,7 @@ struct LogoutSheet: ViewModifier {
     
     func body(content: Content) -> some View {
         #if os(macOS)
-        content.alert(isPresented: $presented) {
+        return content.alert(isPresented: $presented) {
             Alert(title: Text(questionText),
                   primaryButton: .default(Text("No, stay logged in")),
                   secondaryButton: .destructive(Text("Yes, logout"), action: {

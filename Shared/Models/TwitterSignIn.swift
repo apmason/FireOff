@@ -20,7 +20,11 @@ class TwitterSignIn: NSObject, ObservableObject {
     private var swifter: Swifter?    
     static let shared = TwitterSignIn()
     
-    @Published var signedIn: Bool = false
+    @Published var signedIn: Bool = false {
+        didSet {
+            self.updateCanSendState()
+        }
+    }
     
     #if os(iOS)
     @Published var profileImage: UIImage?
@@ -30,22 +34,22 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     @Published var sendingTweet: Bool = false {
         didSet {
-            self.updateButtonState()
+            self.updateCanSendState()
         }
     }
     
-    // TODO: - Tests for here
+    // TODO: - Write tests for here. Don't allow this `240` to be a magic number.
     @Published var tweetText: String = "" {
         didSet {
             self.remainingCharacters = 240 - tweetText.count
-            self.updateButtonState()
+            self.updateCanSendState()
         }
     }
     
     @Published var canSend: Bool = false
 
     // TODO: - Test to make sure this is 240 to start with
-    // TODO: - @Question - can I have 240 be a reference to a private variable, or something like that?
+    // TODO: - @Question - can I have 240 be a reference to a private variable, or something like that? No magic numbers! What are the benefits of `lazy`?
     @Published private(set) var remainingCharacters: Int = 240
     
     private var token: Credential.OAuthAccessToken?
@@ -69,27 +73,22 @@ class TwitterSignIn: NSObject, ObservableObject {
         }
         
         signedIn = true // TODO: Better way to observe the signed in state?
-        updateButtonState()
         
         swifter = Swifter(consumerKey: Constants.consumerKey,
                           consumerSecret: Constants.consumerSecret,
                           oauthToken: key,
                           oauthTokenSecret: secret)
         
+        verifyCredentials()
+        
         getProfilePhoto(for: userID)
     }
-    
-    private func updateButtonState() {
-        canSend = tweetText.count > 0 && remainingCharacters >= 0 && sendingTweet == false
-    }
-    
-    /// TODO: - Add another function here that sees if the user is logged in with the right credentials. If not, clear out UserDefaults and set the state to signed out so we can exit.
     
     func signIn(completion: @escaping (TwitterError?) -> Void) {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
         swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { [weak self] token, response in
-            // @ALEX: Is this the best way to do this? Using operators instead?
+            // @ALEX: Is this the best way to do this? Using operators instead? To get everything on the main thread?
             DispatchQueue.main.async { [weak self] in
                 guard let self = self, let httpResponse = response as? HTTPURLResponse else {
                     completion(.networkError)
@@ -104,11 +103,13 @@ class TwitterSignIn: NSObject, ObservableObject {
                         return
                     }
                     
+                    /// NOTE: - Here, we will delete one of the two below functions. Either don't call verifyCredentials here (because we're already logged in, so we don't need to) or, remove getProfilePhoto(for:) because we can get the profile from verify credentials, so why duplicate calls (need to verify we always get the profile back)
                     self.getProfilePhoto(for: userID)
+                    self.verifyCredentials() // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
                     
-                    UserDefaults.standard.set(token.key, forKey: self.oauthKey)
-                    UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
-                    UserDefaults.standard.set(token.userID, forKey: self.userIDSecret)
+                    UserDefaults.standard.set("ass", forKey: self.oauthKey)
+                    UserDefaults.standard.set("sso", forKey: self.oauthSecretKey)
+                    UserDefaults.standard.set("dunk", forKey: self.userIDSecret)
                     
                     completion(nil)
                 } else {
@@ -117,9 +118,9 @@ class TwitterSignIn: NSObject, ObservableObject {
                 }
             }
         }, failure: { error in
-            // @ALEX: [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+            // @ALEX: [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates. <--- FIX THIS!!! Questions on this, obviously. Blog post!
             DispatchQueue.main.async {
-                self.signedIn = false
+                self.signedIn = false // NOTE: Should we be setting the signed in state like this? Shouldn't this be reactive to other stuff that is going on?
                 let webError = ASWebAuthenticationSessionError(_nsError: (error as NSError))
                 if webError.code == ASWebAuthenticationSessionError.Code.canceledLogin {
                     completion(.sessionCancelled)
@@ -153,6 +154,8 @@ class TwitterSignIn: NSObject, ObservableObject {
         }, failure: { error in
             self.sendingTweet = false
 
+            // Do a second check just to make sure that the user's credentials weren't cleared out in between the first login and now. We'll logout if there is an issue. Otherwise, present an error to the user.
+            // SwiftUI error presenter?
             // TODO: - call verifyAccountCredentials. Did the post fail because the user wasn't verified? Check here. If that is the case, then sign out, so the user can reauthorize.
             // Otherwise just post the result back to the user.
             
@@ -171,7 +174,36 @@ class TwitterSignIn: NSObject, ObservableObject {
         
         signedIn = false
     }
+    
+    /**
+     func checkLogin() {
+     // if it's succesful present an error to the user that it was a temporary network issue.
+     // if it's a real auth issue, present an error saying that the user needs to be logged out. Present an alert saying that we're logging them out, then log them out.
+     
+     // call logout on acceptance. Would it be best to chain that together with Combine? How to really use Combine to chain things together?
+     }
+     */
+    
+    // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
+    private func verifyCredentials() {
+        swifter?.verifyAccountCredentials(success: { response in
+            // parse response
+            print("New response in here: \(response)")
+            
+        }, failure: { error in
+            print("error authorizing user: \(error.localizedDescription)")
+            // Present an alert to the user.
+            // Your session has expired. You'll need to log back in (only one option in the alert)
+            self.logout()
+        })
+    }
+    
+    private func updateCanSendState() {
+        canSend = tweetText.count > 0 && remainingCharacters >= 0 && sendingTweet == false
+    }
 }
+
+// MARK: - ASWebAuthenticationPresentationContextProviding
 
 extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
     
@@ -179,6 +211,8 @@ extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
         return ASPresentationAnchor()
     }
 }
+
+// MARK: - Profile photo fetching
 
 extension TwitterSignIn {
     

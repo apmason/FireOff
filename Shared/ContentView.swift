@@ -12,13 +12,6 @@ struct ContentView: View {
     @ObservedObject var twitterModel: TwitterSignIn = TwitterSignIn.shared
     
     var body: some View {
-//        HStack(alignment: .top, spacing: 10, content: {
-//            Color.gray
-//                .frame(width: 30, height: 30)
-//                .cornerRadius(15)
-//            Color.blue
-//        })
-//        .padding(.horizontal, 20)
         if twitterModel.signedIn {
             TweetView()
         } else {
