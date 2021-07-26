@@ -32,11 +32,10 @@ struct TweetView: View {
                 ActivityView()
             }
         }
-        
-        
-        // @ALEX TODO: Listening to twitterModel.signingIn for the alert.
-        
-        
+        .alert(isPresented: $twitterModel.activeAlert.showAlert) {
+            print("Showing an alert")
+            return twitterModel.activeAlert.alert ?? Alert(title: Text("A default error occured"))
+        }
     }
 }
 

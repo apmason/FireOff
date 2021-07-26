@@ -51,6 +51,7 @@ class TwitterSignIn: NSObject, ObservableObject {
     // TODO: - Test to make sure this is 240 to start with
     // TODO: - @Question - can I have 240 be a reference to a private variable, or something like that? No magic numbers! What are the benefits of `lazy`?
     @Published private(set) var remainingCharacters: Int = 240
+    @Published var activeAlert = ActiveAlert()
     
     private var token: Credential.OAuthAccessToken?
     
@@ -60,7 +61,7 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     fileprivate let oauthKey = "twitter_oauth_key"
     fileprivate let oauthSecretKey = "twitter_oauth_secret"
-    fileprivate let userIDSecret = "twitter_userID"
+    fileprivate let userIDKey = "twitter_userID"
     
     private override init() {
         super.init()
@@ -68,22 +69,23 @@ class TwitterSignIn: NSObject, ObservableObject {
         // We already have the keys stored, so make the Swifter object right away.
         guard let key = UserDefaults.standard.string(forKey: oauthKey),
               let secret = UserDefaults.standard.string(forKey: oauthSecretKey),
-              let userID = UserDefaults.standard.string(forKey: userIDSecret) else {
+              let userID = UserDefaults.standard.string(forKey: userIDKey) else {
             return
         }
-        
-        signedIn = true // TODO: Better way to observe the signed in state?
-        
+                
         swifter = Swifter(consumerKey: Constants.consumerKey,
                           consumerSecret: Constants.consumerSecret,
                           oauthToken: key,
                           oauthTokenSecret: secret)
         
-        verifyCredentials()
+        signedIn = true // TODO: Better way to observe the signed in state?
         
+        // NOTE: - ONE OF THESE WILL BE DELETED!!
+        verifyCredentials()
         getProfilePhoto(for: userID)
     }
     
+    // @ALEX This is an ugly function, how can we make it nicer?
     func signIn(completion: @escaping (TwitterError?) -> Void) {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
@@ -107,9 +109,9 @@ class TwitterSignIn: NSObject, ObservableObject {
                     self.getProfilePhoto(for: userID)
                     self.verifyCredentials() // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
                     
-                    UserDefaults.standard.set("ass", forKey: self.oauthKey)
-                    UserDefaults.standard.set("sso", forKey: self.oauthSecretKey)
-                    UserDefaults.standard.set("dunk", forKey: self.userIDSecret)
+                    UserDefaults.standard.set(token.key, forKey: self.oauthKey)
+                    UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
+                    UserDefaults.standard.set(token.userID, forKey: self.userIDKey)
                     
                     completion(nil)
                 } else {
@@ -170,7 +172,7 @@ class TwitterSignIn: NSObject, ObservableObject {
     func logout() {
         UserDefaults.standard.set(nil, forKey: self.oauthKey)
         UserDefaults.standard.set(nil, forKey: self.oauthSecretKey)
-        UserDefaults.standard.set(nil, forKey: self.userIDSecret)
+        UserDefaults.standard.set(nil, forKey: self.userIDKey)
         
         signedIn = false
     }
@@ -187,14 +189,15 @@ class TwitterSignIn: NSObject, ObservableObject {
     // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
     private func verifyCredentials() {
         swifter?.verifyAccountCredentials(success: { response in
-            // parse response
-            print("New response in here: \(response)")
+            // TODO: - Don't need to do anything on success, should we just not have this callback?
             
         }, failure: { error in
-            print("error authorizing user: \(error.localizedDescription)")
-            // Present an alert to the user.
-            // Your session has expired. You'll need to log back in (only one option in the alert)
-            self.logout()
+            print("error authorizing user: \(error.localizedDescription)") // @ALEX: - Turn all print statements into debug statements of varying levels. What's the best logging facility, what is actually useful?
+            
+            self.activeAlert.createAlert(title: "Session expired!", message: "You'll need to log back in", buttonText: "Okay") {
+                print("We exited")
+                self.logout()
+            }
         })
     }
     

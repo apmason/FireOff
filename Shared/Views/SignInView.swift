@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
-    @State private var errorAlert = ErrorAlert()
+    //@State private var errorAlert = ErrorAlert() // @ALEX: - Removed the error alert, so make sure this works elsewhere!
     @State private var signingIn: Bool = false // @ALEX update this so the Model-View connection is more similar to TweetView (we shouldn't track the state in the view, the model handles all that)).
     
     var body: some View {
@@ -27,15 +27,16 @@ struct SignInView: View {
                         return // we won't show an alert if the user cancels the session
                     }
                     
-                    self.errorAlert.showAlert(for: error)
+                    //self.errorAlert.showAlert(for: error)
                 }
             }
-            .alert(isPresented: $errorAlert.showAlert, content: {
-                Alert(title: Text("Error!"), message: Text(errorAlert.errorString), dismissButton: .cancel(Text("Okay"), action: {
-                    self.errorAlert.reset()
-                }))
-            })
             .padding(.all)
+            // @ALEX: - Removed this, so make sure that we add error handling back.
+//            .alert(isPresented: $errorAlert.showAlert, content: {
+//                Alert(title: Text("Error!"), message: Text(errorAlert.errorString), dismissButton: .cancel(Text("Okay"), action: {
+//                    self.errorAlert.reset()
+//                }))
+//            })
             
             // Show an activity indicator if we're signing in.
             if signingIn {
