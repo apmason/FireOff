@@ -76,25 +76,7 @@ class TwitterSignIn: NSObject, ObservableObject {
                           oauthToken: key,
                           oauthTokenSecret: secret)
         
-        // Get the user's information
-        swifter?.showUser(UserTag.id(userID), success: { json in
-            guard case let .object(dict) = json,
-                  let profilePath = dict["profile_image_url_https"],
-                  case let .string(path) = profilePath else {
-                print("Failed to get profile image URL")
-                return
-            }
-            
-            guard let imageURL = URL(string: path) else {
-                return
-            }
-            
-            self.downloadProfile(imageURL)
-            
-        }, failure: { error in
-            print("There was an error getting user info")
-            // TODO: - Call authentication route to make sure we're signed in properly
-        })
+        getProfilePhoto(for: userID)
     }
     
     private func updateButtonState() {
@@ -118,9 +100,11 @@ class TwitterSignIn: NSObject, ObservableObject {
                     self.signedIn = true
                     self.token = token
                     
-                    guard let token = token else {
+                    guard let token = token, let userID = token.userID else {
                         return
                     }
+                    
+                    self.getProfilePhoto(for: userID)
                     
                     UserDefaults.standard.set(token.key, forKey: self.oauthKey)
                     UserDefaults.standard.set(token.secret, forKey: self.oauthSecretKey)
@@ -197,6 +181,28 @@ extension TwitterSignIn: ASWebAuthenticationPresentationContextProviding {
 }
 
 extension TwitterSignIn {
+    
+    private func getProfilePhoto(for userID: String) {
+        // Get the user's information
+        swifter?.showUser(UserTag.id(userID), success: { json in
+            guard case let .object(dict) = json,
+                  let profilePath = dict["profile_image_url_https"],
+                  case let .string(path) = profilePath else {
+                print("Failed to get profile image URL")
+                return
+            }
+            
+            guard let imageURL = URL(string: path) else {
+                return
+            }
+            
+            self.downloadProfile(imageURL)
+            
+        }, failure: { error in
+            print("There was an error getting user info")
+            // TODO: - Call authentication route to make sure we're signed in properly
+        })
+    }
     
     /// Downloads the user's profile image
     private func downloadProfile(_ url: URL) {
