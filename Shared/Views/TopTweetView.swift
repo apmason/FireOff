@@ -29,9 +29,7 @@ struct TopTweetView: View {
             }
             .disabled(!twitterModel.canSend)
             .padding(10)
-            .foregroundColor(Color.white)
-            .background(Color.blue)
-            .cornerRadius(5) // @ALEX: New SwiftUI button type?
+            .border(Color.black, width: 2)
         }
     }
 }
