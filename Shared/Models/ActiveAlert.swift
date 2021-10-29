@@ -8,7 +8,6 @@
 import SwiftUI
 import Foundation
 
-// @ALEX - Can this be a class or a struct? What's the difference? What matters, what doesn't? Should really look this up and understand that.
 /// An object that presents an error
 struct ActiveAlert {
     

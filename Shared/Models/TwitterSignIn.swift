@@ -40,7 +40,6 @@ class TwitterSignIn: NSObject, ObservableObject {
         }
     }
     
-    // TODO: - Write tests for here. Don't allow this `240` to be a magic number.
     @Published var tweetText: String = "" {
         didSet {
             self.remainingCharacters = 240 - tweetText.count
@@ -50,8 +49,6 @@ class TwitterSignIn: NSObject, ObservableObject {
     
     @Published var canSend: Bool = false
 
-    // TODO: - Test to make sure this is 240 to start with
-    // TODO: - @Question - can I have 240 be a reference to a private variable, or something like that? No magic numbers! What are the benefits of `lazy`?
     @Published private(set) var remainingCharacters: Int = 240
     @Published var activeAlert = ActiveAlert()
     
@@ -81,7 +78,7 @@ class TwitterSignIn: NSObject, ObservableObject {
         
         setSavedImage()
         
-        signedIn = true // TODO: Better way to observe the signed in state?
+        signedIn = true
         
         verifyCredentials(fetchProfileImage: true, completion: { success in
             if !success {
@@ -90,12 +87,11 @@ class TwitterSignIn: NSObject, ObservableObject {
         })
     }
     
-    // @ALEX This is an ugly function, how can we make it nicer?
+    // TODO: This is an ugly function, make it nicer
     func signIn(completion: @escaping (TwitterError?) -> Void) {
         swifter = Swifter(consumerKey: Constants.consumerKey, consumerSecret: Constants.consumerSecret)
         
         swifter?.authorize(withProvider: self, callbackURL: URL(string: Constants.callbackURL)!, success: { [weak self] token, response in
-            // @ALEX: Is this the best way to do this? Using operators instead? To get everything on the main thread?
             DispatchQueue.main.async { [weak self] in
                 guard let self = self, let httpResponse = response as? HTTPURLResponse else {
                     completion(.networkError)
@@ -106,7 +102,6 @@ class TwitterSignIn: NSObject, ObservableObject {
                     self.signedIn = true
                     self.token = token
                     
-                    // @ALEX TODO: Is there a better place to put this verifyCredentials call? How to make SwiftUI testable? Then if we change something we know that things are setup properly.
                     self.verifyCredentials(fetchProfileImage: true, completion: { success in
                         if !success {
                             self.createSessionExpiredAlert()
@@ -124,7 +119,6 @@ class TwitterSignIn: NSObject, ObservableObject {
                 }
             }
         }, failure: { error in
-            // @ALEX: [SwiftUI] Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates. <--- FIX THIS!!! Questions on this, obviously. Blog post!
             DispatchQueue.main.async {
                 self.signedIn = false // NOTE: Should we be setting the signed in state like this? Shouldn't this be reactive to other stuff that is going on?
                 let webError = ASWebAuthenticationSessionError(_nsError: (error as NSError))
@@ -172,7 +166,6 @@ class TwitterSignIn: NSObject, ObservableObject {
                                                     // We don't need to do anything in here, but we want our button to be clickable
                                                  })
                 } else {
-                    // TODO: present an alert that we need to log the user out. On button tap we'll log them out.
                     self.createSessionExpiredAlert()
                 }
             }
@@ -190,8 +183,6 @@ class TwitterSignIn: NSObject, ObservableObject {
     /**
      // call logout on acceptance. Would it be best to chain that together with Combine? How to really use Combine to chain things together?
      */
-    
-    // @ALEX We can get the profile image from the `verifyAccountCredentials` call. Does that always get returned here? I think it does, but we should test to find out. Then we can remove the call to showUser. Need to see where else that is called from.
     
     /// Verify a signed in Twitter user's credentials. If the verification fails an error will be presented and the user will be logged out right immediately.
     /// - Parameter fetchProfileImage: A Boolean value determining if a succesful response should download the latest profile image URL.
@@ -212,10 +203,9 @@ class TwitterSignIn: NSObject, ObservableObject {
                 self.downloadProfileImage(imageURL)
             }
             
-            // TODO: - Don't need to do anything on success, should we just not have this callback?
             completion(true)
         }, failure: { error in
-            print("error authorizing user: \(error.localizedDescription)") // @ALEX: - Turn all print statements into debug statements of varying levels. What's the best logging facility, what is actually useful?
+            print("error authorizing user: \(error.localizedDescription)")
             completion(false)
         })
     }

@@ -14,7 +14,6 @@ struct PlaceholderEditor: View {
     var placeholderText: String
     var onChange: (() -> Void)?
     
-    // TODO: - Fix all these padding changes
     var editorTopPadding: CGFloat {
         #if os(iOS)
         return -7
