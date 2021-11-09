@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SignInView: View {
-    @State private var errorAlert = ErrorAlert()
     @State private var signingIn: Bool = false
     
     var body: some View {
@@ -27,14 +26,9 @@ struct SignInView: View {
                         return // we won't show an alert if the user cancels the session
                     }
                     
-                    self.errorAlert.showAlert(for: error)
+                    //self.errorAlert.showAlert(for: error)
                 }
             }
-            .alert(isPresented: $errorAlert.showAlert, content: {
-                Alert(title: Text("Error!"), message: Text(errorAlert.errorString), dismissButton: .cancel(Text("Okay"), action: {
-                    self.errorAlert.reset()
-                }))
-            })
             .padding(.all)
             
             // Show an activity indicator if we're signing in.

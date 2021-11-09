@@ -16,15 +16,15 @@ struct PlaceholderEditor: View {
     
     var editorTopPadding: CGFloat {
         #if os(iOS)
-        return -5
+        return -7
         #else
         return 0
         #endif
     }
     
-    var placeholderTopPadding: CGFloat {
+    var editorLeadingPadding: CGFloat {
         #if os(iOS)
-        return 8
+        return -3.5
         #else
         return 0
         #endif
@@ -34,31 +34,33 @@ struct PlaceholderEditor: View {
         #if os(iOS)
         return 0
         #else
-        return 5
+        return 3.5
         #endif
     }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
             TextEditor(text: $text)
+                .multilineTextAlignment(.leading)
                 .font(.body)
                 .foregroundColor(.black)
                 .onChange(of: text) { value in
                     showPlaceholder = text == ""
                     onChange?()
                 }
-                .multilineTextAlignment(.leading)
-                .frame(minHeight: 30, alignment: .leading)
-                .padding(.leading, editorTopPadding)
+                .frame(alignment: .topLeading)
+                .padding(.top, editorTopPadding)
+                .padding(.leading, editorLeadingPadding)
                 
             if showPlaceholder {
                 Text(placeholderText)
                     .font(.body)
                     .foregroundColor(AppColors.placeholderTextColor)
-                    .padding(.top, placeholderTopPadding)
+                    .frame(alignment: .topLeading)
                     .padding(.leading, placeholderLeadingPadding)
             }
         }
+        .background(Color.red.opacity(0.3))
     }
 }
 
