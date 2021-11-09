@@ -129,7 +129,6 @@
 		C30A41D526A35B7000472D64 = {
 			isa = PBXGroup;
 			children = (
-				C3F48BAE26AE26CA0062BC3A /* LogoutSheet.swift */,
 				C30A41DA26A35B7100472D64 /* Shared */,
 				C30A41E426A35B7200472D64 /* iOS */,
 				C30A41EB26A35B7200472D64 /* macOS */,
@@ -227,6 +226,7 @@
 		C380EB8B26A7293A00CAE4DD /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				C3F48BAE26AE26CA0062BC3A /* LogoutSheet.swift */,
 				C380EB8C26A7294300CAE4DD /* Colors.swift */,
 			);
 			path = UI;
