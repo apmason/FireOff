@@ -29,7 +29,6 @@ struct TopTweetView: View {
             }
             .disabled(!twitterModel.canSend)
             .padding(10)
-            .border(Color.black, width: 2)
         }
     }
 }
